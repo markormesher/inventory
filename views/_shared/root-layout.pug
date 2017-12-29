@@ -1,0 +1,44 @@
+- _ = _ || {}
+
+block variables
+
+doctype html
+html
+	head
+		if _.title
+			title #{_.title} :: Inventory
+		else
+			title Inventory
+		link(rel = 'stylesheet', href = '/_vendor/bootstrap/css/bootstrap.min.css')
+		link(rel = 'stylesheet', href = '/_vendor/jquery-ui/jquery-ui.min.css')
+		link(rel = 'stylesheet', href = '/_vendor/gentelella/custom.min.css')
+		link(rel = 'stylesheet', href = '/_vendor/font-awesome/css/font-awesome.min.css')
+		link(rel = 'stylesheet', href = '/_vendor/toastr/toastr.min.css')
+		link(rel = 'stylesheet', href = '/_shared/tweaks.css')
+		meta(name = 'viewport', content = 'width=device-width, initial-scale=1')
+		block head
+
+	body(class= bodyClass || 'nav-md')
+
+		block body
+
+		script(src = '/_vendor/jquery/jquery.min.js')
+		script(src = '/_vendor/jquery-ui/jquery-ui.min.js')
+		script(src = '/_vendor/bootstrap/js/bootstrap.min.js')
+		script(src = '/_vendor/toastr/toastr.min.js')
+		script(src = '/_vendor/gentelella/custom.min.js')
+
+		script(type = 'text/javascript').
+			toastr.options.closeButton = true;
+			toastr.options.timeOut = 1000;
+			toastr.options.extendedTimeOut = 10000;
+			toastr.options.progressBar = true;
+
+		script(type = 'text/javascript').
+			window.Inventory = {};
+			window.Inventory.toastrMessages = !{JSON.stringify(locals.flash || [])};
+			window.Inventory.user = !{JSON.stringify(locals.user, null, 0)}
+
+		script(src = '/_shared/toastr-listener.js')
+
+		block scripts
