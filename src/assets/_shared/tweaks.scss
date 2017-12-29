@@ -4,6 +4,12 @@
 	line-height: 13px;
 }
 
+.btn {
+	i.fa {
+		margin-right: 8px;
+	}
+}
+
 ul.ui-autocomplete {
 	z-index: 1100;
 	border: 1px solid #cccccc;
@@ -20,10 +26,6 @@ ul.ui-autocomplete {
 			padding: 0;
 		}
 	}
-}
-
-i.title-icon {
-	margin-right: 12px;
 }
 
 .site_title {

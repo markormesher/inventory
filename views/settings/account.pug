@@ -1,0 +1,34 @@
+extends ../_shared/page-layout
+
+block page-body
+
+	form(action = '/settings/account', method = 'post').form-vertical
+		div.row
+			div.col-sm-12.col-md-6.form-group
+				label(for = 'username') Username
+				input#username.form-control(value = user.username, disabled = true)
+
+			div.col-sm-12.col-md-6.form-group
+				label(for = 'displayName') Display Name
+				input#displayName.form-control(value = user.displayName, disabled = true)
+
+		div.row
+			div.col-sm-12.col-md-6.form-group
+				label(for = 'currentPassword') Current Password
+				input#currentPassword.form-control(type = 'password')
+				span.form-text.text-muted Only required if changing your password.
+
+		div.row
+			div.col-sm-12.col-md-6.form-group
+				label(for = 'newPassword1') New Password
+				input#newPassword1.form-control(type = 'password')
+
+			div.col-sm-12.col-md-6.form-group
+				label(for = 'newPassword2') Repeat New Password
+				input#newPassword2.form-control(type = 'password')
+
+		div.row
+			div.col-sm-12.col-md-6
+				button.btn.btn-primary(type = 'submit')
+					i.fa.fa-save
+					| Save

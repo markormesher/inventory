@@ -26,5 +26,9 @@ export class User extends Model<User> {
 		type: DataType.ARRAY(DataType.STRING),
 		defaultValue: []
 	})
-	permissions: string[]
+	permissions: string[];
+
+	hasPermission(permission: string): boolean {
+		return this.username === 'admin' || this.permissions.indexOf(permission) >= 0;
+	}
 }
