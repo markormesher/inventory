@@ -1,16 +1,15 @@
 extends ../_shared/page-layout
 
 block page-body
-
-	form(action = '/settings/account', method = 'post').form-vertical
+	form.validate(action = '/settings/account', method = 'post').form-vertical
 		div.row
 			div.col-sm-12.col-md-6.form-group
 				label(for = 'username') Username
-				input#username.form-control(value = user.username, disabled = true)
+				input#username.form-control(value = user.username, disabled = true, required = true)
 
 			div.col-sm-12.col-md-6.form-group
 				label(for = 'displayName') Display Name
-				input#displayName.form-control(value = user.displayName, disabled = true)
+				input#displayName.form-control(value = user.displayName, disabled = !user.hasPermission('settings.accounts.edit-display-name'), required = true)
 
 		div.row
 			div.col-sm-12.col-md-6.form-group
@@ -20,15 +19,19 @@ block page-body
 
 		div.row
 			div.col-sm-12.col-md-6.form-group
-				label(for = 'newPassword1') New Password
-				input#newPassword1.form-control(type = 'password')
+				label(for = 'newPassword1') New Password:
+				input#newPassword1.form-control(type = 'password', minlength = 8)
 
 			div.col-sm-12.col-md-6.form-group
-				label(for = 'newPassword2') Repeat New Password
-				input#newPassword2.form-control(type = 'password')
+				label(for = 'newPassword2') Repeat New Password:
+				input#newPassword2.form-control(type = 'password', data-rule-equalTo = "#newPassword1")
 
 		div.row
 			div.col-sm-12.col-md-6
 				button.btn.btn-primary(type = 'submit')
 					i.fa.fa-save
 					| Save
+
+block page-scripts
+	script(src = '/_npm/jquery-validation/dist/jquery.validate.min.js')
+	script(src = '/_shared/form-validation.js')
