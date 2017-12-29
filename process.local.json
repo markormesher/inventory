@@ -1,0 +1,12 @@
+{
+	"apps": [
+		{
+			"name": "inventory",
+			"cwd": ".",
+			"script": "./dist/app.js",
+			"env": {
+				"ENV": "dev"
+			}
+		}
+	]
+}
