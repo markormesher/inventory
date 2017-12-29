@@ -68,7 +68,15 @@ app.use('/favicon.ico', (req: Request, res: Response) => res.end());
 // views
 app.set('views', Path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
+
+// static files
 app.use(Express.static(Path.join(__dirname, 'public')));
+[
+	'jquery',
+	'jquery-validation'
+].forEach(lib => {
+	app.use(`/_npm/${lib}`, Express.static(Path.join(__dirname, `../node_modules/${lib}`)));
+});
 
 // error handlers
 class StatusError extends Error {
