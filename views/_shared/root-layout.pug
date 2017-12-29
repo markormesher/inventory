@@ -39,6 +39,7 @@ html
 			window.Inventory.toastrMessages = !{JSON.stringify(locals.flash || [])};
 			window.Inventory.user = !{JSON.stringify(locals.user, null, 0)}
 
+		script(src = '/_shared/global.js')
 		script(src = '/_shared/toastr-listener.js')
 
 		block scripts

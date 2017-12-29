@@ -15,8 +15,7 @@ const restrict: (requiredPermissions?: string[]) => RequestHandler = (requiredPe
 			return;
 		}
 
-		const userPermissions = user.permissions || [];
-		const hasAllPermissions = requiredPermissions.every((p) => userPermissions.indexOf(p) >= 0);
+		const hasAllPermissions = requiredPermissions.every(p => user.hasPermission(p));
 
 		if (hasAllPermissions) {
 			next();

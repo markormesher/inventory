@@ -14,18 +14,11 @@ import Seeder = require('./helpers/seeder');
 
 import RootController = require('./controllers/root');
 import AuthController = require('./controllers/auth');
+import SettingsController = require('./controllers/settings');
 import ExpressFlash = require("express-flash-2");
 
 const secrets = ConfigLoader.getSecrets();
 const constants = ConfigLoader.getConstants();
-
-declare global {
-	// defined here, used in front-end JS and Pug code
-	//noinspection JSUnusedGlobalSymbols
-	interface Window {
-		Inventory: any;
-	}
-}
 
 const app = Express();
 
@@ -33,7 +26,7 @@ const app = Express();
 SequelizeDb.sync().then(() => {
 	console.log('Database models synced successfully');
 	Seeder.populateDatabase();
-}).error((err) => {
+}).error(err => {
 	console.log('Failed to sync database models');
 	console.log(err);
 });
@@ -67,6 +60,7 @@ app.use(AuthHelper.loadUser);
 // controllers
 app.use('/', RootController);
 app.use('/auth', AuthController);
+app.use('/settings', SettingsController);
 
 // kill favicon requests
 app.use('/favicon.ico', (req: Request, res: Response) => res.end());

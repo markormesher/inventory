@@ -1,4 +1,5 @@
 - active = null
+- user = locals.user
 
 div.menu_section
 	h3 General
@@ -7,3 +8,16 @@ div.menu_section
 		li(class = (active === 'dashboard' ? 'active' : '')): a(href = '/')
 			i.fa.fa-fw.fa-dashboard
 			| Dashboard
+
+div.menu_section
+	h3 Settings
+	ul.nav.side-menu
+
+		li(class = (active === 'settings/account' ? 'active' : '')): a(href = '/settings/account')
+			i.fa.fa-fw.fa-user
+			| Accounts Settings
+
+		if user.hasPermission('users.view')
+			li(class = (active === 'users' ? 'active' : '')): a(href = '/users')
+				i.fa.fa-fw.fa-users
+				| Manage Users
