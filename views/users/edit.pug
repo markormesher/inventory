@@ -1,0 +1,31 @@
+extends ../_shared/page-layout
+
+block page-body
+	- editUser = locals.editUser || {}
+	- editId = editUser.id || ''
+
+	form.validate(action = '/users/edit/' + editId, method = 'post')
+		div.row
+			div.col-sm-12.col-md-6.form-group
+				label(for = 'username') Username
+				input#username.form-control(value = editUser.username || '', disabled = editUser.username, required = true)
+
+			div.col-sm-12.col-md-6.form-group
+				label(for = 'displayName') Display Name
+				input#displayName.form-control(value = editUser.displayName || '', required = true)
+
+		if !editId
+			div.row
+				div.col-sm-12.col-md-6.form-group
+					label(for = 'newPassword1') New Password:
+					input#newPassword1.form-control(type = 'password', minlength = 8)
+
+				div.col-sm-12.col-md-6.form-group
+					label(for = 'newPassword2') Repeat New Password:
+					input#newPassword2.form-control(type = 'password', data-rule-equalTo = "#newPassword1")
+
+		div.row
+			div.col-sm-12.col-md-6
+				button.btn.btn-primary(type = 'submit')
+					i.fa.fa-save
+					| Save

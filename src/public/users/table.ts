@@ -1,5 +1,23 @@
 import {User} from '../../models/User';
 
+const getActions = (rowUser: User) => {
+	const actions: string[] = [];
+
+	if (window.Inventory.user.hasPermission('users.edit')) {
+		actions.push(`<a href="/users/edit/${rowUser.id}">Edit</a>`);
+	}
+
+	if (window.Inventory.user.hasPermission('users.delete') && rowUser.username !== 'admin') {
+		actions.push(`<a href="/users/delete/${rowUser.id}">Delete</a>`);
+	}
+
+	if (actions.length === 0) {
+		return '<span class="text-muted">None</span>';
+	} else {
+		return actions.join(' <span class="text-muted">&bull;</span> ');
+	}
+};
+
 $(() => {
 	$('table#users').DataTable({
 		paging: true,
@@ -14,12 +32,12 @@ $(() => {
 		],
 		serverSide: true,
 		ajax: {
-			url: '/users/data',
+			url: '/users/list-data',
 			type: 'get',
 			dataSrc: (raw: { data: User[] }) => {
 				const displayData: string[][] = [];
 				raw.data.forEach(user => {
-					displayData.push([user.username, user.displayName, ''])
+					displayData.push([user.username, user.displayName, getActions(user)])
 				});
 				return displayData;
 			}

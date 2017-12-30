@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 set -v
 
 # clean previous builds
