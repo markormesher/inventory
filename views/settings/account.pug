@@ -15,7 +15,7 @@ block page-body
 			div.col-sm-12.col-md-6.form-group
 				label(for = 'currentPassword') Current Password
 				input#currentPassword.form-control(type = 'password')
-				span.form-text.text-muted Only required if changing your password.
+				span.help-block.text-muted Only required if changing your password.
 
 		div.row
 			div.col-sm-12.col-md-6.form-group
@@ -31,7 +31,3 @@ block page-body
 				button.btn.btn-primary(type = 'submit')
 					i.fa.fa-save
 					| Save
-
-block page-scripts
-	script(src = '/_npm/jquery-validation/dist/jquery.validate.min.js')
-	script(src = '/_shared/form-validation.js')
