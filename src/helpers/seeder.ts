@@ -1,6 +1,7 @@
 import {User} from "../models/User";
 import {sha256} from "./hashing";
 import ConfigLoader = require('./config-loader');
+import uuid = require('uuid');
 
 const secrets = ConfigLoader.getSecrets();
 
@@ -13,6 +14,7 @@ const populateDatabase = () => {
 		} else {
 			console.log('Creating admin user...');
 			User.create({
+				id: uuid.v4(),
 				displayName: 'System Admin',
 				username: 'admin',
 				password: sha256(secrets.adminPassword)

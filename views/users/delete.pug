@@ -1,0 +1,16 @@
+extends ../_shared/page-layout
+
+block page-body
+
+	- deleteUser = locals.deleteUser
+
+	div.row: div.col-xs-12
+		p Are you sure you want to delete #[strong #{deleteUser.displayName}] (#{deleteUser.username})?
+
+		p
+			a.btn.btn-default(href = '/users')
+				i.fa.fa-fw.fa-arrow-left
+				| No, take me back
+			a.btn.btn-danger(href = '/users/delete/' + deleteUser.id + '?confirm=y')
+				i.fa.fa-fw.fa-trash-o
+				| Yes, delete forever

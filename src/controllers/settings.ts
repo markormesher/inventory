@@ -1,8 +1,10 @@
-import {Request, Response, Router} from 'express';
+import {NextFunction, Request, Response, Router} from 'express';
 
 import AuthHelper = require('../helpers/auth');
 import {User} from "../models/User";
 import {sha256} from "../helpers/hashing";
+import {ValidationError} from "sequelize";
+import {Promise} from "bluebird";
 
 const router = Router();
 
@@ -15,49 +17,47 @@ router.get('/account', AuthHelper.restrict(), (req: Request, res: Response) => {
 	});
 });
 
-router.post('/account', AuthHelper.restrict(), (req: Request, res: Response) => {
+router.post('/account', AuthHelper.restrict(), (req: Request, res: Response, next: NextFunction) => {
 	const user = (<User> req.user);
 
-	const formDisplayName = req.body.displayName;
-	const formCurrentPassword = req.body.currentPassword;
-	const formNewPassword1 = req.body.newPassword1;
-	const formNewPassword2 = req.body.newPassword2;
+	const userToUpdate: any = {};
+	const updateSelector: any = {id: user.id};
 
-	const updateValues = (<any> {});
-	const updateSelector = (<any> {
-		id: user.id
-	});
-
-	// block name changes if the user doesn't have the right permission
+	// block display name changes if the user doesn't have the right permission
 	if (user.hasPermission('settings.accounts.edit-display-name')) {
-		updateValues['displayName'] = formDisplayName;
+		userToUpdate.displayName = req.body.displayName;
+	} else {
+		userToUpdate.displayName = user.displayName;
 	}
 
-	// check if we're changing passwords
-	if (formCurrentPassword.length > 0 || formNewPassword1.length > 0 || formNewPassword2.length > 0) {
-		if (formNewPassword1.length < 8) {
-			res.flash('error', 'Your password needs to be at least 8 characters.');
-			res.redirect('/settings/account');
-			return;
-		} else if (formNewPassword1 != formNewPassword2) {
-			res.flash('error', 'You need to enter your new password twice.');
-			res.redirect('/settings/account');
-			return;
+	const userToValidate = User.build(userToUpdate);
+	const validationPromises = [userToValidate.validate({skip: ['username']})];
+
+	// add password validation/value if is it being changed
+	if (req.body.currentPassword.length || req.body.newPassword1.length || req.body.newPassword2.length) {
+		validationPromises.push(userToValidate.validateNewPassword(req.body.newPassword1, req.body.newPassword2));
+		userToUpdate.password = sha256(req.body.newPassword1);
+		updateSelector.password = sha256(req.body.currentPassword);
+	}
+
+	Promise.all(validationPromises).then(() => {
+		User.update(userToUpdate, {where: updateSelector}).then(changes => {
+			if (changes[0] === 1) {
+				res.flash('success', 'Changes saved.');
+				res.redirect('/settings/account');
+			} else {
+				res.flash('error', 'Sorry, your changes couldn\'t be saved.');
+				res.redirect('/settings/account');
+			}
+		}).catch(next);
+	}).catch((validationError: ValidationError) => {
+		if (validationError.errors && validationError.errors.length > 0) {
+			validationError.errors.forEach(error => res.flash('error', error.message));
 		} else {
-			updateValues['password'] = sha256(formNewPassword1);
-			updateSelector['password'] = sha256(formCurrentPassword);
+			res.flash('error', validationError.message);
 		}
-	}
-
-	// commit the updates
-	User.update(updateValues, {where: updateSelector}).then(() => {
-		res.flash('success', 'Your changes have been saved.');
 		res.redirect('/settings/account');
-	}).error(err => {
-		console.log(err);
-		res.flash('error', 'Sorry, your changes could not be saved.');
-		res.redirect('/settings/account');
-	});
+	}).catch(next);
 });
 
 export = router;

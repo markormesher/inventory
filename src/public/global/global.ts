@@ -17,4 +17,7 @@ $(() => {
 			$(e).attr('name', e.id);
 		}
 	});
+
+	// tooltips
+	$('[data-toggle="tooltip"]').tooltip();
 });

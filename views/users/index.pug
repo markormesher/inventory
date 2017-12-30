@@ -4,14 +4,15 @@ block page-head
 	link(rel = 'stylesheet', href = '/_npm/datatables.net-bs/css/dataTables.bootstrap.css')
 
 block page-title-extra
-	button#add-btn.btn.btn-success.create-btn
-		i.fa.fa-fw.fa-user-plus
-		|  Add User
+	if user.hasPermission('users.view')
+		a.btn.btn-success(href = '/users/edit')
+			i.fa.fa-fw.fa-user-plus
+			|  Add User
 
 block page-body
 
 	div.row: div.col-xs-12
-		table#users.table.table-condensed.table-hover
+		table#users.table.table-hover
 			thead
 				tr
 					th Username
