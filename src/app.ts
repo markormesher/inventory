@@ -3,19 +3,15 @@ import BodyParser = require('body-parser');
 import Express  = require('express');
 import {Request, Response, NextFunction} from 'express';
 import ExpressSession = require('express-session');
+import ExpressFlash = require('express-flash-2');
 import Passport = require('passport');
-import NodeSassMiddleware = require('node-sass-middleware');
 
+import NodeSassMiddleware = require('node-sass-middleware');
 import ConfigLoader = require('./helpers/config-loader');
 import PassportConfig = require('./helpers/passport-config');
 import AuthHelper = require('./helpers/auth');
 import SequelizeDb = require('./helpers/db');
 import Seeder = require('./helpers/seeder');
-
-import RootController = require('./controllers/root');
-import AuthController = require('./controllers/auth');
-import SettingsController = require('./controllers/settings');
-import ExpressFlash = require("express-flash-2");
 
 const secrets = ConfigLoader.getSecrets();
 const constants = ConfigLoader.getConstants();
@@ -58,9 +54,10 @@ app.use(Passport.session());
 app.use(AuthHelper.loadUser);
 
 // controllers
-app.use('/', RootController);
-app.use('/auth', AuthController);
-app.use('/settings', SettingsController);
+app.use('/', require('./controllers/root'));
+app.use('/auth', require('./controllers/auth'));
+app.use('/settings', require('./controllers/settings'));
+app.use('/users', require('./controllers/users'));
 
 // kill favicon requests
 app.use('/favicon.ico', (req: Request, res: Response) => res.end());
@@ -72,8 +69,14 @@ app.set('view engine', 'pug');
 // static files
 app.use(Express.static(Path.join(__dirname, 'public')));
 [
+	'bootstrap',
+	'datatables.net',
+	'datatables.net-bs',
+	'font-awesome',
+	'gentelella',
 	'jquery',
-	'jquery-validation'
+	'jquery-validation',
+	'toastr'
 ].forEach(lib => {
 	app.use(`/_npm/${lib}`, Express.static(Path.join(__dirname, `../node_modules/${lib}`)));
 });

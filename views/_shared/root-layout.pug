@@ -9,11 +9,10 @@ html
 			title #{_.title} :: Inventory
 		else
 			title Inventory
-		link(rel = 'stylesheet', href = '/_vendor/bootstrap/css/bootstrap.min.css')
-		link(rel = 'stylesheet', href = '/_vendor/jquery-ui/jquery-ui.min.css')
-		link(rel = 'stylesheet', href = '/_vendor/gentelella/custom.min.css')
-		link(rel = 'stylesheet', href = '/_vendor/font-awesome/css/font-awesome.min.css')
-		link(rel = 'stylesheet', href = '/_vendor/toastr/toastr.min.css')
+		link(rel = 'stylesheet', href = '/_npm/bootstrap/dist/css/bootstrap.min.css')
+		link(rel = 'stylesheet', href = '/_npm/font-awesome/css/font-awesome.min.css')
+		link(rel = 'stylesheet', href = '/_npm/toastr/build/toastr.min.css')
+		link(rel = 'stylesheet', href = '/_npm/gentelella/build/css/custom.min.css')
 		link(rel = 'stylesheet', href = '/_shared/tweaks.css')
 		meta(name = 'viewport', content = 'width=device-width, initial-scale=1')
 		block head
@@ -22,11 +21,11 @@ html
 
 		block body
 
-		script(src = '/_vendor/jquery/jquery.min.js')
-		script(src = '/_vendor/jquery-ui/jquery-ui.min.js')
-		script(src = '/_vendor/bootstrap/js/bootstrap.min.js')
-		script(src = '/_vendor/toastr/toastr.min.js')
-		script(src = '/_vendor/gentelella/custom.min.js')
+		script(src = '/_npm/jquery/dist/jquery.min.js')
+		script(src = '/_npm/jquery-validation/dist/jquery.validate.min.js')
+		script(src = '/_npm/bootstrap/dist/js/bootstrap.min.js')
+		script(src = '/_npm/toastr/build/toastr.min.js')
+		script(src = '/_npm/gentelella/build/js/custom.min.js')
 
 		script(type = 'text/javascript').
 			toastr.options.closeButton = true;
@@ -39,7 +38,6 @@ html
 			window.Inventory.toastrMessages = !{JSON.stringify(locals.flash || [])};
 			window.Inventory.user = !{JSON.stringify(locals.user, null, 0)}
 
-		script(src = '/_shared/global.js')
-		script(src = '/_shared/toastr-listener.js')
+		script(src = '/global/bundle.js')
 
 		block scripts
