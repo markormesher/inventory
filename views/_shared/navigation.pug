@@ -17,7 +17,7 @@ div.menu_section
 			i.fa.fa-fw.fa-user
 			| Accounts Settings
 
-		if user.hasPermission('users.view')
+		if user.hasPermission(PERMISSIONS.USERS.VIEW)
 			li(class = (active === 'users' ? 'active' : '')): a(href = '/users')
 				i.fa.fa-fw.fa-users
 				| Manage Users

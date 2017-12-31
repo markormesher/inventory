@@ -1,13 +1,15 @@
 import {User} from '../../models/User';
 
+import Permissions = require('../../helpers/permissions');
+
 const getActions = (rowUser: User) => {
 	const actions: string[] = [];
 
-	if (window.Inventory.user.hasPermission('users.edit')) {
+	if (window.Inventory.user.hasPermission(Permissions.USERS.EDIT)) {
 		actions.push(`<a href="/users/edit/${rowUser.id}">Edit</a>`);
 	}
 
-	if (window.Inventory.user.hasPermission('users.delete') && rowUser.username !== 'admin') {
+	if (window.Inventory.user.hasPermission(Permissions.USERS.DELETE) && rowUser.username !== 'admin') {
 		actions.push(`<a href="/users/delete/${rowUser.id}">Delete</a>`);
 	}
 
