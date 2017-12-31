@@ -29,12 +29,6 @@ html
 		script(src = '/_npm/gentelella/build/js/custom.min.js')
 
 		script(type = 'text/javascript').
-			toastr.options.closeButton = true;
-			toastr.options.timeOut = 1000;
-			toastr.options.extendedTimeOut = 10000;
-			toastr.options.progressBar = true;
-
-		script(type = 'text/javascript').
 			window.Inventory = {};
 			window.Inventory.toastrMessages = !{JSON.stringify(locals.flash || [])};
 			window.Inventory.user = !{JSON.stringify(locals.user, null, 0)}
