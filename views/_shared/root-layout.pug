@@ -28,10 +28,9 @@ html
 		script(src = '/_npm/toastr/build/toastr.min.js')
 		script(src = '/_npm/gentelella/build/js/custom.min.js')
 
-		script(type = 'text/javascript').
-			window.Inventory = {};
-			window.Inventory.toastrMessages = !{JSON.stringify(locals.flash || [])};
-			window.Inventory.user = !{JSON.stringify(locals.user, null, 0)}
+		script(type = 'text/javascript') window.Inventory = {};
+		script(type = 'text/javascript') window.Inventory.toastrMessages = !{JSON.stringify(locals.flash || [])};
+		script(type = 'text/javascript') window.Inventory.user = !{JSON.stringify(locals.user, null, 0)};
 
 		script(src = '/global/bundle.js')
 
