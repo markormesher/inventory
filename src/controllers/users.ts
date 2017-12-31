@@ -19,7 +19,7 @@ router.get(
 		(req: Request, res: Response) => {
 			res.render('users/index', {
 				_: {
-					title: 'Manage Users',
+					pageTitle: 'Manage Users',
 					activePage: 'users',
 				}
 			});
@@ -83,7 +83,7 @@ router.get(
 
 					res.render('users/edit', {
 						_: {
-							title: 'Edit User',
+							pageTitle: 'Edit User',
 							activePage: 'users',
 						},
 						editUser: user
@@ -96,7 +96,7 @@ router.get(
 
 				res.render('users/edit', {
 					_: {
-						title: 'Create User',
+						pageTitle: 'Create User',
 						activePage: 'users',
 					}
 				});
@@ -171,7 +171,7 @@ router.get(
 				} else {
 					res.render('users/delete', {
 						_: {
-							title: 'Delete User',
+							pageTitle: 'Delete User',
 							activePage: 'users',
 						},
 						deleteUser: user

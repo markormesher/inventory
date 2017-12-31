@@ -2,7 +2,14 @@ extends ../_shared/page-layout
 
 block page-body
 
-	p Hi
+	div.x_panel
+		div.x_title
+			h2 Dashboard
+			div.clearfix
 
-	- debug = {user: user, allPermissions: PERMISSIONS}
-	pre= JSON.stringify(debug, null, 2)
+		div.x_content
+
+			p Hi
+
+			- debug = {user: user, allPermissions: PERMISSIONS}
+			pre= JSON.stringify(debug, null, 2)

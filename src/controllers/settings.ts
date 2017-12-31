@@ -11,7 +11,7 @@ const router = Router();
 router.get('/account', AuthHelper.restrict(), (req: Request, res: Response) => {
 	res.render('settings/account', {
 		_: {
-			title: 'Account Settings',
+			pageTitle: 'Account Settings',
 			activePage: 'settings/account',
 		}
 	});

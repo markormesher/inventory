@@ -6,7 +6,9 @@ const router = Router();
 
 router.get('/', AuthHelper.restrict(), (req: Request, res: Response) => {
 	res.render('root/index', {
-		noTitle: true
+		_: {
+			activePage: 'dashboard'
+		}
 	});
 });
 
