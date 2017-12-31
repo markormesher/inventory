@@ -92,18 +92,27 @@ app.use(Express.static(Path.join(__dirname, 'public')));
 
 // error handlers
 app.use((req: Request, res: Response, next: NextFunction) => {
-	const err = new StatusError('Not Found');
+	const err = new StatusError(`Could not find ${req.path}`);
+	err.name = 'Not Found';
 	err.status = 404;
 	next(err);
 });
-app.use((error: StatusError, req: Request, res: Response) => {
-	res.status(error.status || 500);
+app.use((error: StatusError, req: Request, res: Response, next: NextFunction) => {
+	const status = error.status || 500;
+	const name = error.name || error.message || 'Internal Server Error';
+	let message = error.message || 'Internal Server Error';
+	if (name === message) {
+		message = undefined;
+	}
+
+	res.status(status);
 	res.render('root/error', {
 		_: {
-			title: error.status + ': ' + error.message
+			title: status + ': ' + name
 		},
-		message: error.message,
-		status: error.status || 500,
+		name: name,
+		message: message,
+		status: status,
 		error: process.env.ENV === 'dev' ? error : ''
 	});
 });
