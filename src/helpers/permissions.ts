@@ -3,6 +3,7 @@ export = {
 		CREATE: 'users.create',
 		DELETE: 'users.delete',
 		EDIT: 'users.edit',
+		SET_PERMISSIONS: 'users.set-permissions',
 		VIEW: 'users.view',
 	},
 	SETTINGS: {
