@@ -1,10 +1,10 @@
 import {NextFunction, Request, Response, Router} from 'express';
+import {ValidationError} from 'sequelize';
+import {Promise} from 'bluebird';
 
 import AuthHelper = require('../helpers/auth');
-import {User} from "../models/User";
-import {sha256} from "../helpers/hashing";
-import {ValidationError} from "sequelize";
-import {Promise} from "bluebird";
+import {User} from '../models/User';
+import Permissions = require('../helpers/permissions');
 
 const router = Router();
 
@@ -24,7 +24,7 @@ router.post('/account', AuthHelper.restrict(), (req: Request, res: Response, nex
 	const updateSelector: any = {id: user.id};
 
 	// block display name changes if the user doesn't have the right permission
-	if (user.hasPermission('settings.accounts.edit-display-name')) {
+	if (user.hasPermission(Permissions.SETTINGS.ACCOUNTS.EDIT_DISPLAY_NAME)) {
 		userToUpdate.displayName = req.body.displayName;
 	} else {
 		userToUpdate.displayName = user.displayName;

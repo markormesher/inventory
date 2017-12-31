@@ -10,6 +10,7 @@ import ExpressRejection = require('./helpers/express-rejection')
 import ConfigLoader = require('./helpers/config-loader');
 import PassportConfig = require('./helpers/passport-config');
 import AuthHelper = require('./helpers/auth');
+import Permissions = require('./helpers/permissions');
 import SequelizeDb = require('./helpers/db');
 import Seeder = require('./helpers/seeder');
 import {StatusError} from './helpers/StatusError';
@@ -20,7 +21,7 @@ const constants = ConfigLoader.getConstants();
 const app = Express();
 
 // db connection
-SequelizeDb.sync({force: true}).then(() => {
+SequelizeDb.sync().then(() => {
 	console.log('Database models synced successfully');
 	Seeder.populateDatabase();
 }).catch(err => {
@@ -54,6 +55,12 @@ app.use(ExpressRejection());
 app.use(Passport.initialize());
 app.use(Passport.session());
 app.use(AuthHelper.loadUser);
+
+// inserts all permissions into locals for the front-end to grab
+app.use((req: Request, res: Response, next: NextFunction) => {
+	res.locals.PERMISSIONS = Permissions;
+	next();
+});
 
 // controllers
 app.use('/', require('./controllers/root'));
