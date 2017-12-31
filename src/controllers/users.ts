@@ -147,9 +147,7 @@ router.get('/delete/:id', AuthHelper.restrict(['users.view', 'users.delete'], re
 			user.destroy().then(() => {
 				res.flash('success', 'User deleted.');
 				res.redirect('/users');
-			}).error(err => {
-				next(err);
-			});
+			}).catch(next);
 		} else {
 			res.render('users/delete', {
 				_: {

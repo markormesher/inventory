@@ -9,9 +9,7 @@ const init = (passport: Passport) => {
 	passport.deserializeUser((userId: string, callback) => {
 		User.findOne({where: {id: userId}}).then(user => {
 			callback(null, user)
-		}).error(err => {
-			callback(err)
-		});
+		}).catch(callback);
 	});
 
 	passport.use(new LocalPassportStrategy({}, (username, password, callback) => {

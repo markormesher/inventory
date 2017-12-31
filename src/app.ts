@@ -23,7 +23,7 @@ const app = Express();
 SequelizeDb.sync({force: true}).then(() => {
 	console.log('Database models synced successfully');
 	Seeder.populateDatabase();
-}).error(err => {
+}).catch(err => {
 	console.log('Failed to sync database models');
 	console.log(err);
 });
