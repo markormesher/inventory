@@ -1,10 +1,21 @@
 import Sequelize = require('sequelize');
 import {Op, ValidationError} from 'sequelize';
 import Bluebird = require('bluebird');
+import uuid = require('uuid');
 import {Column, DataType, IsUUID, Length, Model, Table} from "sequelize-typescript";
+
+import {sha256} from '../helpers/hashing';
 
 @Table
 export class User extends Model<User> {
+
+	static generateSalt() {
+		return sha256(uuid.v4());
+	}
+
+	static generatePasswordHash(plaintextPassword: string, salt: string) {
+		return sha256(plaintextPassword + salt);
+	}
 
 	@IsUUID(4)
 	@Column({
@@ -23,9 +34,10 @@ export class User extends Model<User> {
 	displayName: string;
 
 	@Column
-	get password(): string {
-		return undefined;
-	}
+	password: string;
+
+	@Column
+	salt: string;
 
 	@Column({
 		type: DataType.ARRAY(DataType.STRING),

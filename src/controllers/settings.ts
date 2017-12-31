@@ -36,8 +36,10 @@ router.post('/account', AuthHelper.restrict(), (req: Request, res: Response, nex
 	// add password validation/value if is it being changed
 	if (req.body.currentPassword.length || req.body.newPassword1.length || req.body.newPassword2.length) {
 		validationPromises.push(userToValidate.validateNewPassword(req.body.newPassword1, req.body.newPassword2));
-		userToUpdate.password = sha256(req.body.newPassword1);
-		updateSelector.password = sha256(req.body.currentPassword);
+		const newSalt = User.generateSalt();
+		userToUpdate.salt = newSalt;
+		userToUpdate.password = User.generatePasswordHash(req.body.newPassword1, newSalt);
+		updateSelector.password = User.generatePasswordHash(req.body.currentPassword, user.salt);
 	}
 
 	Promise.all(validationPromises).then(() => {

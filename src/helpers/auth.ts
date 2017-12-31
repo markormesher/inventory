@@ -1,29 +1,34 @@
 import {Request, Response, NextFunction, RequestHandler} from 'express';
 
+export interface RestrictOptions {
+	redirectTo?: string;
+	redirectMsg?: string;
+}
+
 const loadUser: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
 	const user = req.user;
 	res.locals.user = user || null;
 	next();
 };
 
-const restrict: (requiredPermissions?: string[]) => RequestHandler = (requiredPermissions: string[] = []) => {
-	return (req: Request, res: Response, next: NextFunction) => {
-		const user = req.user;
-		if (!user) {
-			res.flash('error', 'Sorry, you need to log in first.');
-			res.redirect('/auth/login');
-			return;
-		}
-
-		const hasAllPermissions = requiredPermissions.every(p => user.hasPermission(p));
-
-		if (hasAllPermissions) {
-			next();
-		} else {
-			res.flash('error', 'Sorry, you can\'t do that.');
-			res.status(403).end();
-		}
-	};
-};
+const restrict: (requiredPermissions?: string[], options?: RestrictOptions) => RequestHandler =
+		(requiredPermissions = [], options = {}) => {
+			return (req: Request, res: Response, next: NextFunction) => {
+				const user = req.user;
+				if (!user) {
+					res.redirectUnauthorised('/auth/login', 'Sorry, you need to log in first.');
+				} else {
+					if (requiredPermissions.some(p => !user.hasPermission(p))) {
+						if (options.redirectTo) {
+							res.redirectUnauthorised(options.redirectTo, options.redirectMsg);
+						} else {
+							res.rejectUnauthorised(next);
+						}
+					} else {
+						next();
+					}
+				}
+			};
+		};
 
 export {loadUser, restrict};

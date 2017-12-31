@@ -4,10 +4,10 @@ block page-head
 	link(rel = 'stylesheet', href = '/_npm/datatables.net-bs/css/dataTables.bootstrap.css')
 
 block page-title-extra
-	if user.hasPermission('users.view')
+	if user.hasPermission('users.create')
 		a.btn.btn-success(href = '/users/edit')
 			i.fa.fa-fw.fa-user-plus
-			|  Add User
+			| Add User
 
 block page-body
 

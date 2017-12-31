@@ -1,8 +1,7 @@
 import {PassportStatic as Passport} from 'passport';
 import {Strategy as LocalPassportStrategy} from 'passport-local';
 
-import {User} from "../models/User";
-import {sha256} from "./hashing";
+import {User} from '../models/User';
 
 const init = (passport: Passport) => {
 	passport.serializeUser((user: User, callback) => callback(null, user.id));
@@ -16,16 +15,13 @@ const init = (passport: Passport) => {
 	});
 
 	passport.use(new LocalPassportStrategy({}, (username, password, callback) => {
-		User.findOne({
-			where: {
-				username: username,
-				password: sha256(password)
+		User.findOne({where: {username: username}}).then(user => {
+			if (user && user.password == User.generatePasswordHash(password, user.salt)) {
+				callback(null, user);
+			} else {
+				callback(null, null);
 			}
-		}).then(user => {
-			callback(null, user)
-		}).error(err => {
-			callback(err)
-		});
+		}).catch(callback);
 	}));
 };
 
