@@ -8,8 +8,5 @@ block page-body
 			div.clearfix
 
 		div.x_content
-
-			p Hi
-
-			- debug = {user: user, allPermissions: PERMISSIONS}
-			pre= JSON.stringify(debug, null, 2)
+			p You are:
+			pre= JSON.stringify(user, null, 2)
