@@ -1,31 +1,7 @@
-.btn-mini {
-	padding: 2px 6px;
-	font-size: 11px;
-	line-height: 13px;
-}
+// layout
 
-.btn {
-	i.fa {
-		margin-right: 8px;
-	}
-}
-
-ul.ui-autocomplete {
-	z-index: 1100;
-	border: 1px solid #cccccc;
-	background: #ffffff;
-
-	li.ui-menu-item, li.ui-menu-item:hover {
-		cursor: pointer;
-		list-style: none none;
-		margin: 0;
-		padding: 0;
-
-		div, div:hover {
-			margin: 3px 1em 3px 0.4em;
-			padding: 0;
-		}
-	}
+.nav-md .container.body .right_col {
+	padding: 0 !important;
 }
 
 .site_title {
@@ -39,9 +15,12 @@ ul.ui-autocomplete {
 	margin-right: 8px;
 }
 
-.form-control:focus {
-	border-color: #66afe9;
+.x_title h2 {
+	overflow: visible !important;
+	margin: 7px 0 !important;
 }
+
+// text
 
 p.no-margin {
 	margin: 0 !important;
@@ -67,16 +46,21 @@ h4 {
 	padding-bottom: 0;
 }
 
-div.page-title {
-	h3 {
-		float: left;
-	}
+// forms
 
-	div.extra {
-		float: right;
-		text-align: right;
-	}
+.form-control:focus {
+	border-color: #66afe9;
 }
+
+form.validate {
+	margin-top: 0 !important;
+}
+
+form .help-block {
+	margin-bottom: 0 !important;
+}
+
+// tables
 
 table.table {
 	width: 99%;
@@ -100,18 +84,28 @@ td span {
 	}
 }
 
-@media (max-width: 992px) {
-	div.page-title {
-		h3 {
-			display: block;
-		}
+// other elements
 
-		div.extra {
-			display: block;
-			text-align: inherit;
-			width: 100%;
-			clear: both;
-			margin-bottom: 12px;
+.btn {
+	i.fa {
+		margin-right: 8px;
+	}
+}
+
+ul.ui-autocomplete {
+	z-index: 1100;
+	border: 1px solid #cccccc;
+	background: #ffffff;
+
+	li.ui-menu-item, li.ui-menu-item:hover {
+		cursor: pointer;
+		list-style: none none;
+		margin: 0;
+		padding: 0;
+
+		div, div:hover {
+			margin: 3px 1em 3px 0.4em;
+			padding: 0;
 		}
 	}
 }

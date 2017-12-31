@@ -3,21 +3,27 @@ extends ../_shared/page-layout
 block page-head
 	link(rel = 'stylesheet', href = '/_npm/datatables.net-bs/css/dataTables.bootstrap.css')
 
-block page-title-extra
-	if user.hasPermission('users.create')
-		a.btn.btn-success(href = '/users/edit')
-			i.fa.fa-fw.fa-user-plus
-			| Add User
-
 block page-body
 
-	div.row: div.col-xs-12
-		table#users.table.table-hover
-			thead
-				tr
-					th Username
-					th Display Name
-					th Actions
+	div.row: div.col-xs-12: div.x_panel
+		div.x_title
+			h2 Manage Users
+
+			if user.hasPermission(PERMISSIONS.USERS.CREATE)
+				div.panel_toolbox.btn-group.btn-group-sm
+					a.btn.btn-success(href = '/users/edit')
+						i.fa.fa-user-plus
+						| Create User
+
+			div.clearfix
+
+		div.x_content
+			table#users.table.table-hover
+				thead
+					tr
+						th Username
+						th Display Name
+						th Actions
 
 block page-scripts
 	script(src = '/_npm/datatables.net/js/jquery.dataTables.js')
