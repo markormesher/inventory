@@ -68,6 +68,22 @@ router.get(
 		'/edit/:id?',
 		AuthHelper.restrict([Permissions.USERS.VIEW], restrictOptions),
 		(req: Request, res: Response, next: NextFunction) => {
+			const extractValues = (obj: any, arr: string[]) => {
+				for (let key in obj) {
+					if (obj.hasOwnProperty(key)) {
+						const val = obj[key];
+						if (typeof val === typeof '') {
+							arr.push(val);
+						} else {
+							extractValues(val, arr);
+						}
+					}
+				}
+			};
+			const allPermissions: string[] = [];
+			extractValues(Permissions, allPermissions);
+			allPermissions.sort();
+
 			const userId = req.params.id;
 			if (userId) {
 				if (!req.user.hasPermission(Permissions.USERS.EDIT)) {
@@ -86,7 +102,8 @@ router.get(
 							pageTitle: 'Edit User',
 							activePage: 'users',
 						},
-						editUser: user
+						editUser: user,
+						allPermissions: allPermissions
 					});
 				}).catch(next);
 			} else {
@@ -98,7 +115,8 @@ router.get(
 					_: {
 						pageTitle: 'Create User',
 						activePage: 'users',
-					}
+					},
+					allPermissions: allPermissions
 				});
 			}
 		}
@@ -108,14 +126,15 @@ router.post(
 		'/edit/:id?',
 		AuthHelper.restrict([Permissions.USERS.VIEW], restrictOptions),
 		(req: Request, res: Response, next: NextFunction) => {
+			const currentUser = req.user;
 			const userId = req.params.id; // string or undefined
 
 			if (userId) {
-				if (!req.user.hasPermission(Permissions.USERS.EDIT)) {
+				if (!currentUser.hasPermission(Permissions.USERS.EDIT)) {
 					return res.redirectUnauthorised('/users');
 				}
 			} else {
-				if (!req.user.hasPermission(Permissions.USERS.CREATE)) {
+				if (!currentUser.hasPermission(Permissions.USERS.CREATE)) {
 					return res.redirectUnauthorised('/users');
 				}
 			}
@@ -134,6 +153,17 @@ router.post(
 				const salt = User.generateSalt();
 				userToUpsert.salt = salt;
 				userToUpsert.password = User.generatePasswordHash(req.body.newPassword1, salt);
+			}
+
+			// update permissions
+			if (currentUser.hasPermission(Permissions.USERS.SET_PERMISSIONS) && userToUpsert.username !== 'admin') {
+				let newPermissions = req.body['permissions[]'];
+				if (!newPermissions) {
+					newPermissions = [];
+				} else if (typeof newPermissions === typeof '') {
+					newPermissions = [newPermissions];
+				}
+				userToUpsert.permissions = newPermissions;
 			}
 
 			Promise.all(validationPromises).then(() => {

@@ -42,3 +42,19 @@ block page-body
 							div.col-sm-12.col-md-6.form-group
 								label(for = 'newPassword2') Repeat New Password:
 								input#newPassword2.form-control(type = 'password', data-rule-equalTo = "#newPassword1")
+
+					if user.hasPermission(PERMISSIONS.USERS.SET_PERMISSIONS) && editUser.username !== 'admin'
+						div.row
+							div.col-sm-12.form-group
+								label Permissions:
+								div.clearfix
+								div.checkbox-set
+									- lastPrefix = allPermissions[0].split('.')[0]
+									for p in allPermissions
+										- prefix = p.split('.')[0]
+										if prefix !== lastPrefixg
+											div.clearfix
+											- lastPrefix = prefix
+										div.checkbox.col-xs-12.col-sm-6.col-md-4: label
+											input(type = 'checkbox', name = 'permissions[]', value = p, checked = editUser.hasPermission(p))
+											span !{p.replace(/\./g, ' &raquo; ')}
