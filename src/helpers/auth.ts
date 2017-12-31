@@ -7,7 +7,12 @@ export interface RestrictOptions {
 
 const loadUser: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
 	const user = req.user;
-	res.locals.user = user || null;
+	if (user) {
+		user.clearSensitiveValues();
+		res.locals.user = user;
+	} else {
+		res.locals.user = null;
+	}
 	next();
 };
 

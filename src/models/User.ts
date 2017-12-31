@@ -49,6 +49,11 @@ export class User extends Model<User> {
 		return this.username === 'admin' || this.permissions.indexOf(permission) >= 0;
 	}
 
+	clearSensitiveValues() {
+		this.salt = undefined;
+		this.password = undefined;
+	}
+
 	validateUniqueUsername(): Bluebird<undefined> {
 		return new Bluebird<undefined>((resolve, reject) => {
 			User.findOne({
