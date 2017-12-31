@@ -7,8 +7,8 @@ export = {
 		VIEW: 'users.view',
 	},
 	SETTINGS: {
-		ACCOUNTS: {
-			EDIT_DISPLAY_NAME: 'settings.accounts.edit-display-name'
+		ACCOUNT: {
+			EDIT_DISPLAY_NAME: 'settings.account.edit-display-name'
 		}
 	}
 };

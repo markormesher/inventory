@@ -6,6 +6,7 @@ import AuthHelper = require('../helpers/auth');
 import {User} from '../models/User';
 import {RestrictOptions} from '../helpers/auth';
 import Permissions = require('../helpers/permissions');
+import ConfigLoader = require('../helpers/config-loader');
 
 const restrictOptions: RestrictOptions = {
 	redirectTo: '/users'
@@ -116,7 +117,8 @@ router.get(
 						pageTitle: 'Create User',
 						activePage: 'users',
 					},
-					allPermissions: allPermissions
+					allPermissions: allPermissions,
+					defaultPermissions: ConfigLoader.getConstants().defaultPermissions
 				});
 			}
 		}

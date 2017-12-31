@@ -51,10 +51,11 @@ block page-body
 								div.checkbox-set
 									- lastPrefix = allPermissions[0].split('.')[0]
 									for p in allPermissions
+										- pChecked = editId ? editUser.hasPermission(p) : defaultPermissions.indexOf(p) >= 0
 										- prefix = p.split('.')[0]
-										if prefix !== lastPrefixg
+										if prefix !== lastPrefix
 											div.clearfix
 											- lastPrefix = prefix
 										div.checkbox.col-xs-12.col-sm-6.col-md-4: label
-											input(type = 'checkbox', name = 'permissions[]', value = p, checked = editUser.hasPermission(p))
+											input(type = 'checkbox', name = 'permissions[]', value = p, checked = pChecked)
 											span !{p.replace(/\./g, ' &raquo; ')}
