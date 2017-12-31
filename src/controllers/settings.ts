@@ -24,7 +24,7 @@ router.post('/account', AuthHelper.restrict(), (req: Request, res: Response, nex
 	const updateSelector: any = {id: user.id};
 
 	// block display name changes if the user doesn't have the right permission
-	if (user.hasPermission(Permissions.SETTINGS.ACCOUNTS.EDIT_DISPLAY_NAME)) {
+	if (user.hasPermission(Permissions.SETTINGS.ACCOUNT.EDIT_DISPLAY_NAME)) {
 		userToUpdate.displayName = req.body.displayName;
 	} else {
 		userToUpdate.displayName = user.displayName;

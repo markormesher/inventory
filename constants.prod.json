@@ -1,3 +1,6 @@
 {
-	"port": 3010
+	"port": 3010,
+	"defaultPermissions": [
+		"settings.account.edit-display-name"
+	]
 }

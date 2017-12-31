@@ -1,5 +1,6 @@
 class Constants {
 	port: number;
+	defaultPermissions: string[];
 }
 
 class Secrets {
