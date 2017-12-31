@@ -18,12 +18,12 @@ const populateDatabase = () => {
 				password: User.generatePasswordHash(secrets.adminPassword, salt)
 			}).then(() => {
 				console.log('Created admin user');
-			}).error(err => {
+			}).catch(err => {
 				console.log('Could not create admin user');
 				console.log(err);
 			});
 		}
-	}).error(err => {
+	}).catch(err => {
 		console.log('Could not check for admin user');
 		console.log(err);
 	});
