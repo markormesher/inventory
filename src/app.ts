@@ -5,13 +5,14 @@ import {Request, Response, NextFunction} from 'express';
 import ExpressSession = require('express-session');
 import ExpressFlash = require('express-flash-2');
 import Passport = require('passport');
-
 import NodeSassMiddleware = require('node-sass-middleware');
+import ExpressRejection = require('./helpers/express-rejection')
 import ConfigLoader = require('./helpers/config-loader');
 import PassportConfig = require('./helpers/passport-config');
 import AuthHelper = require('./helpers/auth');
 import SequelizeDb = require('./helpers/db');
 import Seeder = require('./helpers/seeder');
+import {StatusError} from './helpers/StatusError';
 
 const secrets = ConfigLoader.getSecrets();
 const constants = ConfigLoader.getConstants();
@@ -19,7 +20,7 @@ const constants = ConfigLoader.getConstants();
 const app = Express();
 
 // db connection
-SequelizeDb.sync().then(() => {
+SequelizeDb.sync({force: true}).then(() => {
 	console.log('Database models synced successfully');
 	Seeder.populateDatabase();
 }).error(err => {
@@ -49,6 +50,7 @@ app.use(ExpressFlash());
 
 // auth
 PassportConfig.init(Passport);
+app.use(ExpressRejection());
 app.use(Passport.initialize());
 app.use(Passport.session());
 app.use(AuthHelper.loadUser);
@@ -82,10 +84,6 @@ app.use(Express.static(Path.join(__dirname, 'public')));
 });
 
 // error handlers
-class StatusError extends Error {
-	status: number;
-}
-
 app.use((req: Request, res: Response, next: NextFunction) => {
 	const err = new StatusError('Not Found');
 	err.status = 404;

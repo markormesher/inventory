@@ -4,11 +4,15 @@ import {Promise} from 'bluebird';
 
 import AuthHelper = require('../helpers/auth');
 import {User} from '../models/User';
-import {sha256} from '../helpers/hashing';
+import {RestrictOptions} from '../helpers/auth';
+
+const restrictOptions: RestrictOptions = {
+	redirectTo: '/users'
+};
 
 const router = Router();
 
-router.get('/', AuthHelper.restrict(['users.view']), (req: Request, res: Response) => {
+router.get('/', AuthHelper.restrict(['users.view'], restrictOptions), (req: Request, res: Response) => {
 	res.render('users/index', {
 		_: {
 			title: 'Manage Users',
@@ -51,9 +55,13 @@ router.get('/list-data', AuthHelper.restrict(['users.view']), (req: Request, res
 	});
 });
 
-router.get('/edit/:id?', AuthHelper.restrict(['users.view', 'users.edit']), (req: Request, res: Response, next: NextFunction) => {
+router.get('/edit/:id?', AuthHelper.restrict(['users.view'], restrictOptions), (req: Request, res: Response, next: NextFunction) => {
 	const userId = req.params.id;
 	if (userId) {
+		if (!req.user.hasPermission('users.edit')) {
+			return res.redirectUnauthorised('/users');
+		}
+
 		User.findOne({where: {id: userId}}).then(user => {
 			if (!user) {
 				res.flash('error', 'Sorry, that user can\'t be edited.');
@@ -70,6 +78,10 @@ router.get('/edit/:id?', AuthHelper.restrict(['users.view', 'users.edit']), (req
 			});
 		}).catch(next);
 	} else {
+		if (!req.user.hasPermission('users.create')) {
+			return res.redirectUnauthorised('/users');
+		}
+
 		res.render('users/edit', {
 			_: {
 				title: 'Create User',
@@ -79,8 +91,18 @@ router.get('/edit/:id?', AuthHelper.restrict(['users.view', 'users.edit']), (req
 	}
 });
 
-router.post('/edit/:id?', AuthHelper.restrict(['users.view', 'users.edit']), (req: Request, res: Response, next: NextFunction) => {
+router.post('/edit/:id?', AuthHelper.restrict(['users.view'], restrictOptions), (req: Request, res: Response, next: NextFunction) => {
 	const userId = req.params.id; // string or undefined
+
+	if (userId) {
+		if (!req.user.hasPermission('users.edit')) {
+			return res.redirectUnauthorised('/users');
+		}
+	} else {
+		if (!req.user.hasPermission('users.create')) {
+			return res.redirectUnauthorised('/users');
+		}
+	}
 
 	const userToUpsert: any = {
 		id: userId,
@@ -93,7 +115,9 @@ router.post('/edit/:id?', AuthHelper.restrict(['users.view', 'users.edit']), (re
 	// add password validation/value if this is a new user
 	if (req.body.newPassword1) {
 		validationPromises.push(userToValidate.validateNewPassword(req.body.newPassword1, req.body.newPassword2));
-		userToUpsert.password = sha256(req.body.newPassword1);
+		const salt = User.generateSalt();
+		userToUpsert.salt = salt;
+		userToUpsert.password = User.generatePasswordHash(req.body.newPassword1, salt);
 	}
 
 	Promise.all(validationPromises).then(() => {
@@ -111,7 +135,7 @@ router.post('/edit/:id?', AuthHelper.restrict(['users.view', 'users.edit']), (re
 	}).catch(next);
 });
 
-router.get('/delete/:id', AuthHelper.restrict(['users.view', 'users.delete']), (req: Request, res: Response, next: NextFunction) => {
+router.get('/delete/:id', AuthHelper.restrict(['users.view', 'users.delete'], restrictOptions), (req: Request, res: Response, next: NextFunction) => {
 	User.findOne({where: {id: req.params.id}}).then(user => {
 		if (!user || user.username === 'admin') {
 			res.flash('error', 'Sorry, that user can\'t be deleted.');

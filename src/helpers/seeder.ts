@@ -1,7 +1,5 @@
 import {User} from "../models/User";
-import {sha256} from "./hashing";
 import ConfigLoader = require('./config-loader');
-import uuid = require('uuid');
 
 const secrets = ConfigLoader.getSecrets();
 
@@ -12,12 +10,12 @@ const populateDatabase = () => {
 		if (user) {
 			console.log(`Admin user was created at ${user.createdAt}`)
 		} else {
-			console.log('Creating admin user...');
+			const salt = User.generateSalt();
 			User.create({
-				id: uuid.v4(),
 				displayName: 'System Admin',
 				username: 'admin',
-				password: sha256(secrets.adminPassword)
+				salt: salt,
+				password: User.generatePasswordHash(secrets.adminPassword, salt)
 			}).then(() => {
 				console.log('Created admin user');
 			}).error(err => {
